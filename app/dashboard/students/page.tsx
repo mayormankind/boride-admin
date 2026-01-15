@@ -173,7 +173,7 @@ export default function StudentsPage() {
 
       {/* Pagination */}
       {pagination && pagination.pages > 1 && (
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-sm text-gray-600">
             Page {pagination.page} of {pagination.pages}
           </p>

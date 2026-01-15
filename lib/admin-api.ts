@@ -17,6 +17,7 @@ adminApi.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
+      clearAuthToken();
       // Redirect to login on unauthorized
       if (
         typeof window !== "undefined" &&
@@ -28,6 +29,38 @@ adminApi.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+let storedToken: string | null = null;
+
+export const setAuthToken = (token: string) => {
+  storedToken = token;
+  if (typeof window !== "undefined") {
+    localStorage.setItem("admin_token", token);
+  }
+};
+
+export const getAuthToken = () => {
+  if (!storedToken && typeof window !== "undefined") {
+    storedToken = localStorage.getItem("admin_token");
+  }
+  return storedToken;
+};
+
+export const clearAuthToken = () => {
+  storedToken = null;
+  if (typeof window !== "undefined") {
+    localStorage.removeItem("admin_token");
+  }
+};
+
+// Request interceptor to add token
+adminApi.interceptors.request.use((config) => {
+  const token = getAuthToken();
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
 
 // ========== TYPES ==========
 export interface Admin {
@@ -133,11 +166,20 @@ export interface PaginatedResponse<T> {
 
 // ========== AUTH API ==========
 export const adminAuth = {
-  login: (email: string, password: string) =>
-    adminApi.post<{ success: boolean; data: Admin }>("/auth/login", {
+  login: async (email: string, password: string) => {
+    const response = await adminApi.post<{
+      success: boolean;
+      data: Admin;
+      token?: string;
+    }>("/auth/login", {
       email,
       password,
-    }),
+    });
+    if (response.data.token) {
+      setAuthToken(response.data.token);
+    }
+    return response;
+  },
 
   me: () => adminApi.get<{ success: boolean; data: Admin }>("/auth/me"),
 
