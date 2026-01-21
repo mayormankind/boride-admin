@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { adminDrivers, type Driver } from "@/lib/admin-api";
+import { adminDrivers } from "@/lib/admin-api";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { CheckCircle, XCircle, Loader2, Star } from "lucide-react";
+import { Driver } from "@/lib/types";
 
 export default function DriversPage() {
   const [page, setPage] = useState(1);

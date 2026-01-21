@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { adminStudents, type Student } from "@/lib/admin-api";
+import { adminStudents } from "@/lib/admin-api";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { CheckCircle, XCircle, Loader2 } from "lucide-react";
+import { Student } from "@/lib/types";
 
 export default function StudentsPage() {
   const [page, setPage] = useState(1);

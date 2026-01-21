@@ -2,7 +2,8 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { adminAuth, type Admin } from "@/lib/admin-api";
+import { adminAuth } from "@/lib/admin-api";
+import { Admin } from "../types";
 
 interface AdminAuthContextValue {
   admin: Admin | null;

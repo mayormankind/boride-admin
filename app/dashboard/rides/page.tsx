@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { adminRides, type Ride } from "@/lib/admin-api";
+import { adminRides } from "@/lib/admin-api";
 import { Button } from "@/components/ui/button";
 import { Loader2, MapPin } from "lucide-react";
 import { format } from "date-fns";
+import { Ride } from "@/lib/types";
 
 const statusColors = {
   pending: "bg-yellow-100 text-yellow-800",

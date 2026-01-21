@@ -1,163 +1,61 @@
-// Type definitions for BoRide application
-//lib/types.ts
-export type UserRole = 'student' | 'driver';
-
-export type RideStatus = 'pending' | 'accepted' | 'on-the-way' | 'in-trip' | 'completed' | 'cancelled';
-
-export interface User {
+// ========== TYPES ==========
+export interface Admin {
   id: string;
   fullName: string;
   email: string;
-  phoneNo: string;
-  role: 'student' | 'driver';
-  profileImage?: string;
-  matricNo?: string; // for students
-  vehicleInfo?: VehicleInfo; // for drivers
-  createdAt?: Date;
-  updatedAt?: Date;
+  role: string;
+  isActive: boolean;
+  lastLogin: string | null;
 }
 
-export interface VehicleInfo {
-  make: string;
-  model: string;
-  plateNumber: string;
-  color: string;
-  year?: number;
+export interface Student {
+  _id: string;
+  fullName: string;
+  email: string;
+  matricNo: string;
+  phoneNo: string | null;
+  isVerified: boolean;
+  walletBalance: number;
+  createdAt: string;
+}
+
+export interface Driver {
+  _id: string;
+  fullName: string;
+  email: string;
+  phoneNo: string;
+  isVerified: boolean;
+  isAvailable: boolean;
+  vehicleInfo: {
+    make: string | null;
+    model: string | null;
+    plateNumber: string | null;
+    color: string | null;
+    year: number | null;
+  };
+  rating: number;
+  totalRides: number;
+  createdAt: string;
 }
 
 export interface Ride {
-  id: string;
-  studentId: string;
-  driverId?: string;
-  studentName: string;
-  studentPhone: string;
-  driverName?: string;
-  driverPhone?: string;
-  vehicleInfo?: VehicleInfo;
-  pickupLocation: string;
-  destination: string;
-  pickupCoords?: Coordinates;
-  destinationCoords?: Coordinates;
-  status: RideStatus;
-  estimatedFare?: number;
-  actualFare?: number;
-  distance?: number; // in kilometers
-  duration?: number; // in minutes
-  requestedAt: Date;
-  acceptedAt?: Date;
-  startedAt?: Date;
-  completedAt?: Date;
-  cancelledAt?: Date;
-  cancelReason?: string;
-}
-
-export interface Coordinates {
-  lat: number;
-  lng: number;
-}
-
-export interface SavedLocation {
-  id: string;
-  userId: string;
-  name: string;
-  address: string;
-  coords?: Coordinates;
-  createdAt: Date;
-}
-
-export interface Notification {
-  id: string;
-  userId: string;
-  type: NotificationType;
-  title: string;
-  message: string;
-  read: boolean;
-  data?: Record<string, any>;
-  createdAt: Date;
-  readAt?: Date;
-}
-
-export type NotificationType =
-  | 'ride_accepted'
-  | 'driver_arrived'
-  | 'trip_started'
-  | 'trip_completed'
-  | 'trip_cancelled'
-  | 'promo'
-  | 'system';
-
-export interface DriverStats {
-  dailyEarnings: number;
-  weeklyEarnings: number;
-  monthlyEarnings: number;
-  totalEarnings: number;
-  completedTrips: number;
-  cancelledTrips: number;
-  totalTrips: number;
-  rating: number;
-  totalRatings: number;
-  acceptanceRate?: number;
-  averageResponseTime?: number; // in seconds
-}
-
-export interface WalletTransaction {
-  id: string;
-  _id?: string; // Handle potential mongo _id
-  userId: string;
-  amount: number;
-  type: 'credit' | 'debit';
-  description: string;
-  reference?: string;
-  status: 'pending' | 'success' | 'failed';
-  createdAt: string | Date;
-  updatedAt: string | Date;
-}
-
-export interface WalletData {
-    balance: number;
-    currency: string;
-    transaction: any;
-}
-
-export interface WalletTransactionsData {
-    transactions: WalletTransaction[];
-    pagination?: {
-        page: number;
-        limit: number;
-        total: number;
-        totalPages: number;
-    }
-}
-
-export interface WithdrawResponse extends WalletData {
-    transaction: WalletTransaction;
-}
-
-export interface ApiResponse<T = any> {
-  success: boolean;
-  data?: T;
-  message?: string;
-  errors?: Record<string, string[]>;
-  [key: string]: any;
-}
-
-export interface PaginatedResponse<T = any> {
-  data: T[];
-  pagination: {
-    page: number;
-    limit: number;
-    total: number;
-    totalPages: number;
-  };
-}
-
-export interface StudentRidesResponse {
-  rides: any[];
-  count: number;
-}
-
-export interface BackendRide {
   _id: string;
+  student: {
+    _id: string;
+    fullName: string;
+    phoneNo: string;
+    email: string;
+  } | null;
+  driver: {
+    _id: string;
+    fullName: string;
+    phoneNo: string;
+    vehicleInfo: {
+      make: string | null;
+      model: string | null;
+      plateNumber: string | null;
+    };
+  } | null;
   pickupLocation: {
     address: string;
     coordinates: {
@@ -173,20 +71,31 @@ export interface BackendRide {
     };
   };
   fare: number;
+  paymentMethod: "Cash" | "Wallet";
   status: string;
   createdAt: string;
+  startTime: string | null;
+  endTime: string | null;
 }
 
-export interface StudentStats {
-  student: {
-    fullName: string;
-    matricNo: string;
-  };
-  walletBalance: number;
-  rides: {
-    total: number;
-    completed: number;
-    ongoing: number;
-    cancelled: number;
+export interface DashboardStats {
+  totalStudents: number;
+  totalDrivers: number;
+  totalRides: number;
+  activeRides: number;
+}
+
+export interface Pagination {
+  page: number;
+  limit: number;
+  total: number;
+  pages: number;
+}
+
+export interface PaginatedResponse<T> {
+  success: boolean;
+  data: {
+    pagination: Pagination;
+    [key: string]: T[] | Pagination;
   };
 }
