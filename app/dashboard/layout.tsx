@@ -16,7 +16,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { toast } from "sonner";
-import { type Admin } from "@/lib/admin-api";
+import { type Admin } from "@/lib/types";
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -57,7 +57,7 @@ function SidebarContent({
               key={item.name}
               href={item.href}
               onClick={onNavigate}
-              className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-colors ${
+              className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
                 isActive
                   ? "bg-blue-50 text-blue-600 font-medium"
                   : "text-gray-700 hover:bg-gray-100"
@@ -74,7 +74,7 @@ function SidebarContent({
         <Button
           onClick={onLogout}
           variant="outline"
-          className="w-full flex items-center justify-center gap-2"
+          className="w-full flex items-center justify-center gap-2 h-11"
         >
           <LogOut className="w-4 h-4" />
           Logout
@@ -104,8 +104,9 @@ export default function DashboardLayout({
     try {
       await logout();
       toast.success("Logged out successfully");
-    } catch (error: any) {
-      toast.error(error.message || "Logout failed");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Logout failed";
+      toast.error(message);
     }
   };
 
@@ -145,7 +146,7 @@ export default function DashboardLayout({
                 <span className="sr-only">Toggle menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="p-0 w-72">
+            <SheetContent side="left" className="p-0 w-64">
               <div className="h-full flex flex-col bg-white">
                 <SidebarContent
                   admin={admin}
