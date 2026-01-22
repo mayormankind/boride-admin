@@ -8,7 +8,6 @@ const API_BASE_URL =
 // Create axios instance for admin API
 const adminApi = axios.create({
   baseURL: `${API_BASE_URL}/admin`,
-  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
   },
